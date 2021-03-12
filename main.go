@@ -100,45 +100,4 @@ func main() {
 
 }
 
-func makePlot(C *mat.Dense, mypipe pipeline) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
-	dx := 0.01
-	rows, columns := C.Caps()
-	p.Title.Text = "Laba2"
-	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Y"
 
-	var ps []plot.Plotter
-	var items []item
-	name := ""
-	pts := make(plotter.XYs, rows)
-	for j := 0; j < columns; j++ {
-		for i := 0; i < rows; i++ {
-			pts[i].X = mypipe.l + dx*float64(i)
-			pts[i].Y = C.At(i, j)
-		}
-		name = strconv.Itoa(j)
-		l, err := plotter.NewLine(pts)
-		if err != nil {
-			fmt.Println("Error")
-		}
-		l.Color = plotutil.Color(j)
-		ps = append(ps, l)
-		if name != "" {
-			items = append(items, item{name: name, value: l})
-			name = ""
-		}
-		p.Add(ps...)
-		for _, v := range items {
-			p.Legend.Add(v.name, v.value)
-		}
-	}
-
-	if err := p.Save(15*vg.Inch, 15*vg.Inch, "pointSLaba2.png"); err != nil {
-		panic(err)
-	}
-
-}
